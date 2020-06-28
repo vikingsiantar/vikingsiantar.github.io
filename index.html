@@ -1,0 +1,81 @@
+<html>
+<body>
+<script src="https://sykrn.github.io/pydts/p1.json"></script>
+<script>
+function getObj(o) {
+    var d= {}
+    for (var e in o) /*if (e.indexOf('@') > 0)*/ d[e]= o[e]['score']
+    return d
+}
+var p1= getObj(obj)
+</script>
+<script src="https://sykrn.github.io/pydts/p2.json"></script>
+<script>
+var p2= getObj(obj)
+</script>
+<script src="https://sykrn.github.io/pydts/p3.json"></script>
+<script>
+var p3= getObj(obj)
+function fix(n) { return Math.round(n*100)/100 }
+//function mask(e) { return (e.split('@'))[0]+'<span style="color:#666">@dts-python.batch1</span>' }
+function mask(e) { return e } // will be back later after p3 scoring... hehehe... 
+function combine(a, b, c) {
+    var o= []
+    var e= []
+    for (var k in a) e.push(k)
+    for (var k in b) if (e.indexOf(k) == -1) e.push(k)
+    for (var k in c) if (e.indexOf(k) == -1) e.push(k)
+    for (var i= 0; i<e.length; i++) {
+        var k= e[i]
+        var p1= (a[k] === undefined ? 0 : a[k])
+        var p2= (b[k] === undefined ? 0 : b[k])
+        var p3= (c[k] === undefined ? 0 : c[k])
+        o.push({m:k,s1:p1,s2:p2,s3:p3,t:(p1+p2+p3)/3})
+    }
+    o.sort((p,q) => q.t - p.t)
+    var h= '<tr><th>No.</th><th>Hash ID</th><th>P1 Score</th><th>P2 Score</th><th>P3 Score</th><th>Avg Score</th></tr>'
+    var tab= document.getElementById('tab')
+    var c= ''
+    for (var i= 0; i<o.length; i++)
+        c+= '<tr id="r_'+o[i].m+'" onclick="doreset(this)"><td>'+(i+1)+'</td><td><a id="'+o[i].m+'">'+mask(o[i].m)+'</a></td><td>'+fix(o[i].s1)+'</td><td>'+fix(o[i].s2)+'</td><td>'+fix(o[i].s3)+'</td><td>'+fix(o[i].t)+'</td></tr>'
+    tab.innerHTML= h+c
+    return o
+}
+</script>
+<h2>DTS Cisco: Python Project's Score</h2><hr>
+<p align="right"><small style="color:#999">Thx &amp; credits to the incredible instructors: @sykrn + @ferdinand_winstein, hopefully this site remain available until p3 score is out for a while ;)</small></p><hr>
+<p><input type="email" placeholder="Type Your Email" id="email" /> <button onclick="return dosearch(document.getElementById('email').value)">Search</button> <button onclick="doreset(this)">Reset</button> | <button onclick="location.href='http://maroriver.pythonanywhere.com'">Verify Code @ MaroRiver</button></p></p>
+<style>
+body {padding:0 20px}
+* {font-family:Arial,helvetica}
+table {border-collapse:none}
+th,td {text-align:right} th:nth-child(2),td:nth-child(2) {text-align:left}
+tr:nth-child(even) {background-color:#eee}
+</style>
+<table width="100%" id="tab" cellspacing="0" cellpadding="5">
+</table>
+<hr>
+<small style="color:ccc">&copy;2020 -- 7703 Just 4 fun :)</small>
+</body>
+<script>
+var oo= combine(p1,p2,p3)
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/sha1.min.js"></script>
+<script>
+function dosearch(email) {
+    var ok= false
+    var h= CryptoJS.SHA1(email)
+    for (var i= 0; i<oo.length; i++) if (oo[i].m == h) { ok= true; break }
+    if (!ok) { alert('Your email \"'+email+'\" is not listed here...'); return false }
+    document.getElementById('r_'+h).style.backgroundColor= '#cf0'
+    document.getElementById(h).innerHTML= email
+    window.location= window.location+'#'+h
+    return false
+}
+function doreset(o) {
+    window.location= 'http://dtspython.epizy.com'
+    return false
+}
+</script>
+</html>
