@@ -1,2 +1,0 @@
-"# dtspythonscore" 
-"# vikingsiantar.github.io" 
